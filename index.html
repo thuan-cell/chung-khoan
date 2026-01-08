@@ -1,0 +1,129 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>FireStock AI | Institutional Grade Analysis</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700;800&display=swap');
+    
+    :root {
+      color-scheme: dark;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background-color: #050507;
+      color: #d4d4d8;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* Custom scrollbar for a clean terminal look */
+    .terminal-scrollbar::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    .terminal-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .terminal-scrollbar::-webkit-scrollbar-thumb {
+      background: #27272a;
+      border-radius: 10px;
+    }
+    .terminal-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #3f3f46;
+    }
+
+    .glass-panel {
+      background: rgba(18, 18, 20, 0.7);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    /* Financial report styling */
+    .report-content {
+      line-height: 1.8;
+      font-size: 14.5px;
+      letter-spacing: -0.01em;
+    }
+    
+    .report-content h3 {
+      font-family: 'Inter', sans-serif;
+      font-weight: 800;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: #10b981;
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .report-content h3::before {
+      content: '';
+      width: 3px;
+      height: 12px;
+      background: #10b981;
+      border-radius: 2px;
+    }
+
+    .report-content p {
+      margin-bottom: 1.25rem;
+      color: #a1a1aa;
+    }
+
+    .report-content strong {
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .report-content ul {
+      margin-bottom: 1.5rem;
+    }
+
+    .report-content li {
+      margin-bottom: 0.5rem;
+      position: relative;
+      padding-left: 1.5rem;
+    }
+
+    .report-content li::before {
+      content: '•';
+      position: absolute;
+      left: 0.5rem;
+      color: #3f3f46;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-report { animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+  </style>
+<script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.34.0",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3"
+  }
+}
+</script>
+</head>
+<body>
+  <div id="root"></div>
+</body>
+</html>

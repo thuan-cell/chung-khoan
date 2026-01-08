@@ -1,0 +1,7 @@
+{
+  "name": " Phân Tích Chứng Khoán Việt",
+  "description": "Nền tảng phân tích chứng khoán chuyên sâu cho thị trường Việt Nam, sử dụng Gemini AI để tổng hợp dữ liệu từ FireAnt và đưa ra khuyến nghị mua/bán thông minh.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
