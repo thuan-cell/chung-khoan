@@ -1,7 +1,7 @@
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { analyzeStockWithImage } from './services/geminiService';
-import { StockRecommendation, WatchlistItem } from './types';
+import { StockRecommendation } from './types';
 import RecommendationBadge from './components/RecommendationBadge';
 import TradingGuide from './components/TradingGuide';
 
@@ -18,37 +18,8 @@ const App: React.FC = () => {
   const [searchInput, setSearchInput] = useState<string>('');
   const [customPrompt, setCustomPrompt] = useState<string>('');
   
-  const [watchlist, setWatchlist] = useState<WatchlistItem[]>([]);
-
   const fileInputRef = useRef<HTMLInputElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
-
-  // Load Watchlist from LocalStorage
-  useEffect(() => {
-    const saved = localStorage.getItem('firestock_watchlist');
-    if (saved) {
-      try {
-        setWatchlist(JSON.parse(saved));
-      } catch (e) {
-        console.error("Failed to parse watchlist");
-      }
-    }
-  }, []);
-
-  // Save Watchlist to LocalStorage
-  useEffect(() => {
-    localStorage.setItem('firestock_watchlist', JSON.stringify(watchlist));
-  }, [watchlist]);
-
-  const addToWatchlist = (symbol: string) => {
-    const s = symbol.toUpperCase().trim();
-    if (!s || watchlist.some(item => item.symbol === s)) return;
-    setWatchlist([{ symbol: s, addedAt: Date.now() }, ...watchlist]);
-  };
-
-  const removeFromWatchlist = (symbol: string) => {
-    setWatchlist(watchlist.filter(item => item.symbol !== symbol));
-  };
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,7 +37,6 @@ const App: React.FC = () => {
     try {
       const data = await analyzeStockWithImage(selectedImage, mimeType, searchSymbol, customPrompt);
       setResult(data);
-      addToWatchlist(searchSymbol);
     } catch (err) {
       setError("AI Engine đang bảo trì hoặc file lỗi.");
     } finally {
@@ -142,51 +112,8 @@ const App: React.FC = () => {
           {activeTab === 'analysis' && !embeddedUrl ? (
             <div className="flex flex-col lg:grid lg:grid-cols-12 gap-8 h-full">
               
-              {/* Sidebar: Watchlist */}
-              <aside className="lg:col-span-3 flex flex-col gap-6">
-                <div className="bg-[#0c0c0e]/50 border border-white/[0.03] rounded-3xl p-6 h-fit max-h-[400px] flex flex-col">
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center gap-2">
-                       <i className="fa-solid fa-star text-amber-500/60 text-[10px]"></i>
-                       <h2 className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Danh mục theo dõi</h2>
-                    </div>
-                    <span className="text-[8px] font-bold text-zinc-700">{watchlist.length} MÃ</span>
-                  </div>
-                  
-                  <div className="overflow-y-auto terminal-scrollbar space-y-2 pr-1">
-                    {watchlist.length === 0 ? (
-                      <div className="text-center py-8">
-                        <p className="text-[9px] text-zinc-700 font-bold uppercase tracking-widest">Trống</p>
-                      </div>
-                    ) : (
-                      watchlist.map(item => (
-                        <div key={item.symbol} className="group flex items-center justify-between p-3 bg-white/[0.01] hover:bg-white/[0.03] border border-white/[0.02] rounded-xl transition-all cursor-pointer" onClick={() => setSearchSymbol(item.symbol)}>
-                          <div className="flex flex-col">
-                            <span className={`text-[11px] font-black tracking-widest transition-colors ${searchSymbol === item.symbol ? 'text-emerald-500' : 'text-zinc-300'}`}>{item.symbol}</span>
-                            <span className="text-[7px] text-zinc-700 font-bold uppercase">ADDED</span>
-                          </div>
-                          <button onClick={(e) => { e.stopPropagation(); removeFromWatchlist(item.symbol); }} className="opacity-0 group-hover:opacity-100 p-2 text-zinc-700 hover:text-rose-500 transition-all">
-                            <i className="fa-solid fa-xmark text-[10px]"></i>
-                          </button>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </div>
-
-                <div className="bg-emerald-500/5 border border-emerald-500/10 rounded-3xl p-6">
-                   <h3 className="text-[9px] font-black text-emerald-500/80 uppercase tracking-widest mb-3 flex items-center gap-2">
-                     <i className="fa-solid fa-circle-info"></i>
-                     Mẹo cá nhân
-                   </h3>
-                   <p className="text-[10px] text-zinc-500 leading-relaxed font-medium">
-                     Sử dụng phím tắt <span className="text-emerald-500/60">Cmd+V</span> để dán biểu đồ trực tiếp từ clipboard vào khu vực tải lên.
-                   </p>
-                </div>
-              </aside>
-
-              {/* Data Input Section */}
-              <div className="lg:col-span-4 flex flex-col gap-6">
+              {/* Data Input Section - Expanded */}
+              <div className="lg:col-span-5 flex flex-col gap-6">
                 <div className="space-y-3">
                   <div className="flex items-center justify-between px-1">
                     <div className="flex items-center gap-2">
@@ -207,7 +134,7 @@ const App: React.FC = () => {
                       }
                     }}
                     onDragOver={(e) => e.preventDefault()}
-                    className={`relative border-2 border-dashed rounded-3xl transition-all duration-500 flex items-center justify-center min-h-[350px] cursor-pointer overflow-hidden ${selectedImage ? 'border-emerald-500/20 bg-zinc-950/40' : 'border-white/[0.02] bg-[#0c0c0e]/50 hover:bg-[#121214]/50'}`}
+                    className={`relative border-2 border-dashed rounded-3xl transition-all duration-500 flex items-center justify-center min-h-[400px] cursor-pointer overflow-hidden ${selectedImage ? 'border-emerald-500/20 bg-zinc-950/40' : 'border-white/[0.02] bg-[#0c0c0e]/50 hover:bg-[#121214]/50'}`}
                   >
                     <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={(e) => {
                       const file = e.target.files?.[0];
@@ -219,7 +146,7 @@ const App: React.FC = () => {
                     }} />
                     {selectedImage ? (
                       <div className="p-4 w-full h-full flex items-center justify-center">
-                        <img src={selectedImage} alt="Chart" className="max-w-full max-h-[400px] object-contain rounded-xl shadow-2xl animate-report" />
+                        <img src={selectedImage} alt="Chart" className="max-w-full max-h-[450px] object-contain rounded-xl shadow-2xl animate-report" />
                         <button onClick={(e) => { e.stopPropagation(); setSelectedImage(null); setResult(null); }} className="absolute top-4 right-4 w-9 h-9 bg-zinc-950/90 rounded-full border border-white/[0.05] text-zinc-500 hover:text-rose-500 transition-colors">
                           <i className="fa-solid fa-trash-can text-sm"></i>
                         </button>
@@ -243,14 +170,14 @@ const App: React.FC = () => {
                       value={customPrompt}
                       onChange={(e) => setCustomPrompt(e.target.value)}
                       placeholder="VD: Đang giữ giá 32. Vùng này có phải là phân kỳ âm không? Cắt lỗ ở đâu an toàn?"
-                      className="w-full bg-transparent border-none focus:ring-0 text-zinc-300 text-[11px] font-medium placeholder:text-zinc-800 min-h-[120px] resize-none terminal-scrollbar leading-relaxed"
+                      className="w-full bg-transparent border-none focus:ring-0 text-zinc-300 text-[11px] font-medium placeholder:text-zinc-800 min-h-[140px] resize-none terminal-scrollbar leading-relaxed"
                     />
                   </div>
                 </div>
               </div>
 
-              {/* AI Report Section */}
-              <div className="lg:col-span-5 flex flex-col gap-4">
+              {/* AI Report Section - Expanded */}
+              <div className="lg:col-span-7 flex flex-col gap-4">
                 <div className="flex items-center gap-2 px-1">
                   <i className="fa-solid fa-robot text-emerald-500/40 text-[10px]"></i>
                   <h2 className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em]">AI Chiến Lược {searchSymbol}</h2>
@@ -266,23 +193,23 @@ const App: React.FC = () => {
                     <span className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.4em] animate-pulse">Analyzing Market Patterns...</span>
                   </div>
                 ) : result ? (
-                  <div className="flex-1 glass-panel rounded-[2.5rem] p-8 flex flex-col relative overflow-hidden animate-report border-emerald-500/5">
+                  <div className="flex-1 glass-panel rounded-[2.5rem] p-10 flex flex-col relative overflow-hidden animate-report border-emerald-500/5">
                     <div className="flex items-center justify-between mb-8 pb-8 border-b border-white/[0.04]">
                       <div className="flex flex-col gap-1.5">
                         <span className="text-[8px] font-black text-emerald-500 uppercase tracking-[0.4em]">Official Recommendation</span>
-                        <h1 className="text-xl font-black text-white uppercase tracking-tight">{result.symbol} TERMINAL</h1>
+                        <h1 className="text-2xl font-black text-white uppercase tracking-tight">{result.symbol} TERMINAL</h1>
                       </div>
                       <RecommendationBadge type={result.recommendation} />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-3 mb-8">
-                        <div className="bg-black/40 border border-white/[0.03] p-4 rounded-2xl flex flex-col items-center justify-center text-center">
-                           <span className="text-[8px] font-bold text-zinc-600 uppercase tracking-widest mb-1">Mục tiêu (Target)</span>
-                           <span className="text-sm font-black text-emerald-400 mono">{result.targetPrice || '--.--'}</span>
+                    <div className="grid grid-cols-2 gap-4 mb-10">
+                        <div className="bg-black/40 border border-white/[0.03] p-6 rounded-2xl flex flex-col items-center justify-center text-center">
+                           <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest mb-2">Mục tiêu (Target)</span>
+                           <span className="text-2xl font-black text-emerald-400 mono">{result.targetPrice || '--.--'}</span>
                         </div>
-                        <div className="bg-black/40 border border-white/[0.03] p-4 rounded-2xl flex flex-col items-center justify-center text-center">
-                           <span className="text-[8px] font-bold text-zinc-600 uppercase tracking-widest mb-1">Cắt lỗ (Stop Loss)</span>
-                           <span className="text-sm font-black text-rose-400 mono">{result.stopLoss || '--.--'}</span>
+                        <div className="bg-black/40 border border-white/[0.03] p-6 rounded-2xl flex flex-col items-center justify-center text-center">
+                           <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest mb-2">Cắt lỗ (Stop Loss)</span>
+                           <span className="text-2xl font-black text-rose-400 mono">{result.stopLoss || '--.--'}</span>
                         </div>
                     </div>
 
@@ -310,10 +237,10 @@ const App: React.FC = () => {
                   </div>
                 ) : (
                   <div className="flex-1 border border-dashed border-white/[0.03] rounded-[2.5rem] flex flex-col items-center justify-center p-16 text-center group">
-                    <div className="w-16 h-16 bg-[#0c0c0e] rounded-2xl flex items-center justify-center border border-white/[0.02] mb-6 shadow-xl transition-transform group-hover:scale-110">
-                      <i className="fa-solid fa-shield-halved text-zinc-800 text-2xl group-hover:text-emerald-500/20"></i>
+                    <div className="w-20 h-20 bg-[#0c0c0e] rounded-3xl flex items-center justify-center border border-white/[0.02] mb-6 shadow-xl transition-transform group-hover:scale-110">
+                      <i className="fa-solid fa-shield-halved text-zinc-800 text-3xl group-hover:text-emerald-500/20"></i>
                     </div>
-                    <p className="text-[9px] font-black text-zinc-700 uppercase tracking-[0.4em] leading-loose max-w-[200px]">
+                    <p className="text-[10px] font-black text-zinc-700 uppercase tracking-[0.4em] leading-loose max-w-[250px]">
                       Hệ thống sẵn sàng <br/> Vui lòng cung cấp hình ảnh biểu đồ để kích hoạt AI
                     </p>
                   </div>
