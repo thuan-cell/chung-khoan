@@ -11,17 +11,17 @@ export const analyzeStockWithImage = async (
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   
   const systemInstruction = `
-    Bạn là một CHUYÊN GIA PHÂN TÍCH CHIẾN LƯỢC CAO CẤP tại một quỹ đầu tư hàng đầu Việt Nam (như Dragon Capital hoặc VinaCapital).
-    NHIỆM VỤ: Phân tích biểu đồ kỹ thuật và đưa ra khuyến nghị hành động CỤ THỂ.
+    Bạn là một CHUYÊN GIA PHÂN TÍCH CHIẾN LƯỢC CAO CẤP tại một quỹ đầu tư hàng đầu Việt Nam.
+    NHIỆM VỤ: Phân tích biểu đồ kỹ thuật từ hình ảnh và đưa ra khuyến nghị hành động CỤ THỂ.
     
-    PHONG CÁCH: Chuyên nghiệp, quyết đoán, dữ liệu hóa.
+    PHONG CÁCH: Chuyên nghiệp, quyết đoán, sử dụng thuật ngữ tài chính chuẩn xác.
     
     CẤU TRÚC BÁO CÁO (Markdown):
     ### 1. XU HƯỚNG & DÒNG TIỀN
     (Phân tích ngắn gọn về xu hướng hiện tại, sức mạnh dòng tiền và các cụm nến quan trọng)
     
     ### 2. DỰ BÁO KỸ THUẬT
-    (Dự đoán diễn biến giá trong 2-5 phiên tới dựa trên các chỉ báo RSI, MACD, Bollinger Bands thấy được trên hình)
+    (Dự đoán diễn biến giá trong 2-5 phiên tới dựa trên các chỉ báo kỹ thuật thấy được trên hình)
     
     ### 3. CHIẾN LƯỢC GIAO DỊCH (QUAN TRỌNG NHẤT)
     - **Hành động:** [MUA/BÁN/NẮM GIỮ/QUAN SÁT]
@@ -29,23 +29,22 @@ export const analyzeStockWithImage = async (
     - **Mục tiêu chốt lời (Target):** [Giá cụ thể]
     - **Điểm dừng lỗ (Stop Loss):** [Giá cụ thể]
     
-    LƯU Ý: Nếu người dùng có câu hỏi riêng, hãy ưu tiên trả lời chi tiết ở phần cuối.
+    LƯU Ý: Trả lời bằng Tiếng Việt. Trình bày rõ ràng, dễ đọc.
   `;
 
   const prompt = `
     THỰC HIỆN PHÂN TÍCH BIỂU ĐỒ MÃ: ${symbol.toUpperCase()}
     
-    ${customPrompt ? `YÊU CẦU RIÊNG CỦA NHÀ ĐẦU TƯ: "${customPrompt}"` : "Hãy tập trung vào xu hướng ngắn hạn và các điểm pivot quan trọng."}
+    ${customPrompt ? `YÊU CẦU RIÊNG CỦA NHÀ ĐẦU TƯ: "${customPrompt}"` : "Hãy tập trung vào xu hướng ngắn hạn và các điểm đảo chiều tiềm năng."}
 
     YÊU CẦU:
     - Xác định rõ Target Price và Stop Loss.
     - Đánh giá khả năng bứt phá (Breakout) hoặc rủi ro điều chỉnh.
-    - Ngôn ngữ: Tiếng Việt chuyên ngành chứng khoán.
   `;
 
   try {
     const response = await ai.models.generateContent({
-      model: 'gemini-3-flash-preview',
+      model: 'gemini-3-pro-preview',
       contents: {
         parts: [
           {
@@ -71,7 +70,6 @@ export const analyzeStockWithImage = async (
     else if (upperText.includes("BÁN") || upperText.includes("THOÁT HÀNG") || upperText.includes("HÀNH ĐỘNG: BÁN")) rec = 'SELL';
     else if (upperText.includes("NẮM GIỮ") || upperText.includes("HÀNH ĐỘNG: NẮM GIỮ")) rec = 'HOLD';
 
-    // Extracting pseudo target prices for UI display enhancement
     const targetMatch = text.match(/Target.*?\*\*([\d.]+)\*\*/i) || text.match(/Mục tiêu.*?\*\*([\d.]+)\*\*/i);
     const stopLossMatch = text.match(/Stop Loss.*?\*\*([\d.]+)\*\*/i) || text.match(/Dừng lỗ.*?\*\*([\d.]+)\*\*/i);
 

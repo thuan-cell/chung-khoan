@@ -47,16 +47,16 @@ const App: React.FC = () => {
   return (
     <div className="h-screen flex flex-col bg-[#050507] text-[#e4e4e7] overflow-hidden">
       
-      {/* Institutional Header */}
+      {/* Header */}
       <header className="z-50 h-14 border-b border-white/[0.04] bg-[#050507]/80 backdrop-blur-xl flex items-center px-4 justify-between shrink-0">
         <div className="flex items-center gap-8">
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => { setActiveTab('analysis'); setEmbeddedUrl(null); }}>
-            <div className="w-8 h-8 bg-emerald-500 flex items-center justify-center rounded-lg shadow-lg shadow-emerald-500/20">
+            <div className="w-8 h-8 bg-emerald-500 flex items-center justify-center rounded-lg shadow-lg shadow-emerald-500/20 transition-transform hover:scale-105">
               <i className="fa-solid fa-chart-line text-black text-xs"></i>
             </div>
             <div className="flex flex-col">
                 <span className="text-white font-extrabold text-xs tracking-tight uppercase leading-none">FireStock AI</span>
-                <span className="text-[8px] font-bold text-zinc-600 uppercase tracking-widest mt-0.5">Personal Terminal</span>
+                <span className="text-[8px] font-bold text-zinc-600 uppercase tracking-widest mt-0.5">Terminal v2.5</span>
             </div>
           </div>
 
@@ -80,7 +80,7 @@ const App: React.FC = () => {
             <input 
               ref={searchRef}
               type="text" 
-              placeholder="NHẬP MÃ ĐỂ PHÂN TÍCH (VD: FPT, SSI)..." 
+              placeholder="NHẬP MÃ (VD: FPT, HPG, SSI)..." 
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               className="w-full bg-[#121214] border border-white/[0.02] rounded-lg h-8 pl-9 pr-4 text-[10px] font-bold tracking-widest text-white focus:outline-none focus:ring-1 focus:ring-emerald-500/40 transition-all placeholder:text-zinc-800 uppercase"
@@ -112,14 +112,12 @@ const App: React.FC = () => {
           {activeTab === 'analysis' && !embeddedUrl ? (
             <div className="flex flex-col lg:grid lg:grid-cols-12 gap-8 h-full">
               
-              {/* Data Input Section - Expanded */}
+              {/* Cột trái: Input */}
               <div className="lg:col-span-5 flex flex-col gap-6">
                 <div className="space-y-3">
-                  <div className="flex items-center justify-between px-1">
-                    <div className="flex items-center gap-2">
-                      <div className="w-1 h-3 bg-emerald-500/40 rounded-full"></div>
-                      <h2 className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em]">BIỂU ĐỒ: {searchSymbol}</h2>
-                    </div>
+                  <div className="flex items-center gap-2 px-1">
+                    <div className="w-1 h-3 bg-emerald-500/40 rounded-full"></div>
+                    <h2 className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em]">BIỂU ĐỒ: {searchSymbol}</h2>
                   </div>
                   
                   <div 
@@ -134,7 +132,7 @@ const App: React.FC = () => {
                       }
                     }}
                     onDragOver={(e) => e.preventDefault()}
-                    className={`relative border-2 border-dashed rounded-3xl transition-all duration-500 flex items-center justify-center min-h-[400px] cursor-pointer overflow-hidden ${selectedImage ? 'border-emerald-500/20 bg-zinc-950/40' : 'border-white/[0.02] bg-[#0c0c0e]/50 hover:bg-[#121214]/50'}`}
+                    className={`relative border-2 border-dashed rounded-3xl transition-all duration-500 flex items-center justify-center min-h-[420px] cursor-pointer overflow-hidden ${selectedImage ? 'border-emerald-500/20 bg-zinc-950/40' : 'border-white/[0.02] bg-[#0c0c0e]/50 hover:bg-[#121214]/50'}`}
                   >
                     <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={(e) => {
                       const file = e.target.files?.[0];
@@ -169,14 +167,14 @@ const App: React.FC = () => {
                     <textarea 
                       value={customPrompt}
                       onChange={(e) => setCustomPrompt(e.target.value)}
-                      placeholder="VD: Đang giữ giá 32. Vùng này có phải là phân kỳ âm không? Cắt lỗ ở đâu an toàn?"
+                      placeholder="VD: Có nên mua ở vùng giá này không? Target ngắn hạn là bao nhiêu?"
                       className="w-full bg-transparent border-none focus:ring-0 text-zinc-300 text-[11px] font-medium placeholder:text-zinc-800 min-h-[140px] resize-none terminal-scrollbar leading-relaxed"
                     />
                   </div>
                 </div>
               </div>
 
-              {/* AI Report Section - Expanded */}
+              {/* Cột phải: Report */}
               <div className="lg:col-span-7 flex flex-col gap-4">
                 <div className="flex items-center gap-2 px-1">
                   <i className="fa-solid fa-robot text-emerald-500/40 text-[10px]"></i>
@@ -184,32 +182,32 @@ const App: React.FC = () => {
                 </div>
 
                 {loading ? (
-                  <div className="flex-1 bg-[#0c0c0e] rounded-3xl border border-white/[0.03] flex flex-col items-center justify-center p-12">
+                  <div className="flex-1 bg-[#0c0c0e] rounded-[2.5rem] border border-white/[0.03] flex flex-col items-center justify-center p-12 shadow-2xl">
                     <div className="relative mb-8">
-                       <div className="w-16 h-16 border border-emerald-500/10 rounded-full flex items-center justify-center">
-                          <div className="w-12 h-12 border-2 border-emerald-500/5 border-t-emerald-500 rounded-full animate-spin"></div>
+                       <div className="w-20 h-20 border border-emerald-500/10 rounded-full flex items-center justify-center">
+                          <div className="w-14 h-14 border-2 border-emerald-500/5 border-t-emerald-500 rounded-full animate-spin"></div>
                        </div>
                     </div>
-                    <span className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.4em] animate-pulse">Analyzing Market Patterns...</span>
+                    <span className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.4em] animate-pulse">Analyzing Pattern Data...</span>
                   </div>
                 ) : result ? (
-                  <div className="flex-1 glass-panel rounded-[2.5rem] p-10 flex flex-col relative overflow-hidden animate-report border-emerald-500/5">
+                  <div className="flex-1 glass-panel rounded-[2.5rem] p-10 flex flex-col relative overflow-hidden animate-report border-emerald-500/10 shadow-2xl">
                     <div className="flex items-center justify-between mb-8 pb-8 border-b border-white/[0.04]">
                       <div className="flex flex-col gap-1.5">
-                        <span className="text-[8px] font-black text-emerald-500 uppercase tracking-[0.4em]">Official Recommendation</span>
-                        <h1 className="text-2xl font-black text-white uppercase tracking-tight">{result.symbol} TERMINAL</h1>
+                        <span className="text-[8px] font-black text-emerald-500 uppercase tracking-[0.4em]">Strategic Recommendation</span>
+                        <h1 className="text-3xl font-black text-white uppercase tracking-tight">{result.symbol}</h1>
                       </div>
                       <RecommendationBadge type={result.recommendation} />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4 mb-10">
-                        <div className="bg-black/40 border border-white/[0.03] p-6 rounded-2xl flex flex-col items-center justify-center text-center">
+                        <div className="bg-black/40 border border-white/[0.03] p-6 rounded-3xl flex flex-col items-center justify-center text-center transition-all hover:bg-black/60">
                            <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest mb-2">Mục tiêu (Target)</span>
-                           <span className="text-2xl font-black text-emerald-400 mono">{result.targetPrice || '--.--'}</span>
+                           <span className="text-3xl font-black text-emerald-400 mono">{result.targetPrice || '--.--'}</span>
                         </div>
-                        <div className="bg-black/40 border border-white/[0.03] p-6 rounded-2xl flex flex-col items-center justify-center text-center">
+                        <div className="bg-black/40 border border-white/[0.03] p-6 rounded-3xl flex flex-col items-center justify-center text-center transition-all hover:bg-black/60">
                            <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest mb-2">Cắt lỗ (Stop Loss)</span>
-                           <span className="text-2xl font-black text-rose-400 mono">{result.stopLoss || '--.--'}</span>
+                           <span className="text-3xl font-black text-rose-400 mono">{result.stopLoss || '--.--'}</span>
                         </div>
                     </div>
 
@@ -226,22 +224,22 @@ const App: React.FC = () => {
 
                     <div className="mt-8 pt-6 border-t border-white/[0.04] flex items-center justify-between">
                        <div className="flex items-center gap-3">
-                         <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
-                         <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest">Confidence: {result.confidence}%</span>
+                         <div className="w-2 h-2 bg-emerald-500 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.5)]"></div>
+                         <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest">Hệ thống phân tích thời gian thực</span>
                        </div>
-                       <button className="text-[9px] font-black text-zinc-400 hover:text-white uppercase tracking-widest transition-colors flex items-center gap-2">
-                         <i className="fa-solid fa-download"></i>
-                         Tải Báo Cáo
+                       <button onClick={() => window.print()} className="text-[9px] font-black text-emerald-500/60 hover:text-emerald-500 uppercase tracking-widest transition-colors flex items-center gap-2">
+                         <i className="fa-solid fa-file-pdf"></i>
+                         Xuất PDF
                        </button>
                     </div>
                   </div>
                 ) : (
                   <div className="flex-1 border border-dashed border-white/[0.03] rounded-[2.5rem] flex flex-col items-center justify-center p-16 text-center group">
-                    <div className="w-20 h-20 bg-[#0c0c0e] rounded-3xl flex items-center justify-center border border-white/[0.02] mb-6 shadow-xl transition-transform group-hover:scale-110">
-                      <i className="fa-solid fa-shield-halved text-zinc-800 text-3xl group-hover:text-emerald-500/20"></i>
+                    <div className="w-24 h-24 bg-[#0c0c0e] rounded-[2rem] flex items-center justify-center border border-white/[0.02] mb-8 shadow-2xl transition-all group-hover:scale-110 group-hover:border-emerald-500/20">
+                      <i className="fa-solid fa-shield-halved text-zinc-800 text-4xl group-hover:text-emerald-500/40 transition-colors"></i>
                     </div>
-                    <p className="text-[10px] font-black text-zinc-700 uppercase tracking-[0.4em] leading-loose max-w-[250px]">
-                      Hệ thống sẵn sàng <br/> Vui lòng cung cấp hình ảnh biểu đồ để kích hoạt AI
+                    <p className="text-[10px] font-black text-zinc-700 uppercase tracking-[0.4em] leading-loose max-w-[300px] transition-colors group-hover:text-zinc-500">
+                      HỆ THỐNG ĐANG CHỜ <br/> CUNG CẤP BIỂU ĐỒ ĐỂ BẮT ĐẦU
                     </p>
                   </div>
                 )}
@@ -257,12 +255,12 @@ const App: React.FC = () => {
       <footer className="h-10 border-t border-white/[0.03] bg-[#050507] flex items-center px-6 justify-between shrink-0">
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-2">
-            <div className="w-1 h-1 bg-emerald-500 rounded-full animate-pulse"></div>
-            <span className="text-[9px] font-black text-zinc-600 uppercase tracking-[0.2em]">Personal AI Guard Active</span>
+            <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_5px_rgba(16,185,129,0.5)]"></div>
+            <span className="text-[9px] font-black text-zinc-600 uppercase tracking-[0.2em]">Personal AI Terminal Online</span>
           </div>
         </div>
         <div className="flex items-center gap-6">
-            <span className="text-[8px] font-bold text-zinc-800 mono uppercase tracking-widest">v2.5.Stable • Gemini 3 Flash Pro</span>
+            <span className="text-[8px] font-bold text-zinc-800 mono uppercase tracking-widest tracking-tighter">Powered by Gemini 3 Pro • FireStock AI Engine</span>
         </div>
       </footer>
     </div>
